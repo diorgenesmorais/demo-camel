@@ -40,6 +40,7 @@ public class UsuariosService extends RouteBuilder {
 
         from("direct:add-users")
         	.routeId("route.user.add")
+        	.transform().body(Usuarios.class) // transformar em um usuário (tipo/modelo)
         	.log("Novo usuário: ${body}")
         	.to(ExchangePattern.InOnly,"seda:persist")
         	.end();
