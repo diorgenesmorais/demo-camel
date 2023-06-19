@@ -1,0 +1,29 @@
+version: '3.9'
+
+networks:
+  net-backend:
+    name: 'net-backend'
+
+volumes:
+  mysql_conf:
+    name: 'mysql_conf'
+  mysql_data:
+    name: 'mysql_data'
+
+services:
+  db:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - mysql_conf:/etc/mysql/conf.d
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/data/application/init.sql
+    ports:
+      - '3306:3306'
+    networks:
+      - net-backend
+    hostname: db-mysql
+    command: --init-file /data/application/init.sql

@@ -36,7 +36,8 @@ public class UsuariosService extends RouteBuilder {
 					});
 					xchg.getIn().setBody(usuarios);
 				}
-			});
+			})
+			.to("seda:register");
 
         from("direct:add-users")
         	.routeId("route.users.all")
@@ -47,8 +48,8 @@ public class UsuariosService extends RouteBuilder {
         from("direct:user-one")
         	.routeId("route.user.add")
         	.transform().body(Usuarios.class) // transformar em um usuário (tipo/modelo)
-        	.log("Novo usuário: ${body}")
         	.to(ExchangePattern.InOnly,"seda:persist")
+        	.to("seda:register")
         	.end();
         	
         
@@ -56,6 +57,10 @@ public class UsuariosService extends RouteBuilder {
         	.routeId("route.user.persist")
         	.setBody(simple("INSERT INTO usuarios(nome) VALUES ('${body.nome}')"))
         	.to("jdbc:default");
+        
+        from("seda:register")
+        	.log("Novo usuário: ${body}");
+			//.to("http://localhost:8081");
 	}
 
 }
