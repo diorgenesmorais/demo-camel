@@ -19,7 +19,7 @@ export $(cat .env | xargs)
 http://localhost:8080/users
 ```
 
-- Adicionar um novo usuário (POST)
+- Adicionar um novo usuário (numa lista - porque posso adicionar mais de um ao mesmo tempo) (POST)
 
 ```
 http://localhost:8080/users
@@ -28,7 +28,7 @@ http://localhost:8080/users
 - Body (json)
 
 ```
-{
+[{
     "nome": "Anna Carolina"
-}
+}]
 ```

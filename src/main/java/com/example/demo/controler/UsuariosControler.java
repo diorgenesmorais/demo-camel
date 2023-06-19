@@ -33,9 +33,9 @@ public class UsuariosControler {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody Usuarios user) {
+	public ResponseEntity<String> save(@RequestBody List<Usuarios> user) {
 		// TODO: preciso resolver o status da camada service, se de fato foi criado.
 		producerAdd.sendBody(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado");	
+		return ResponseEntity.status(HttpStatus.CREATED).body("Usuário(s) criado(s)");	
 	}
 }

@@ -39,6 +39,12 @@ public class UsuariosService extends RouteBuilder {
 			});
 
         from("direct:add-users")
+        	.routeId("route.users.all")
+        	.log("Corpo da mensagem: ${body}")
+        	.split().body().parallelProcessing()
+        	.to("direct:user-one");
+        
+        from("direct:user-one")
         	.routeId("route.user.add")
         	.transform().body(Usuarios.class) // transformar em um usuário (tipo/modelo)
         	.log("Novo usuário: ${body}")
