@@ -16,10 +16,11 @@ import com.example.demo.model.Usuarios;
 @Service
 public class UsuariosService extends RouteBuilder {
 
+	
 	@Override
 	public void configure() throws Exception {
 		errorHandler(deadLetterChannel("direct:error"));
-
+		
 		from("direct:select")
 			.to("sql:select * from usuarios").process(new Processor() {
 				public void process(Exchange xchg) throws Exception {
@@ -37,7 +38,7 @@ public class UsuariosService extends RouteBuilder {
 					xchg.getIn().setBody(usuarios);
 				}
 			})
-			.to("seda:register");
+			.to(ExchangePattern.InOnly, "seda:send");
 
         from("direct:add-users")
         	.routeId("route.users.all")
@@ -49,7 +50,7 @@ public class UsuariosService extends RouteBuilder {
         	.routeId("route.user.add")
         	.transform().body(Usuarios.class) // transformar em um usuário (tipo/modelo)
         	.to(ExchangePattern.InOnly,"seda:persist")
-        	.to("seda:register")
+        	.to(ExchangePattern.InOnly, "seda:send")
         	.end();
         	
         
@@ -58,9 +59,10 @@ public class UsuariosService extends RouteBuilder {
         	.setBody(simple("INSERT INTO usuarios(nome) VALUES ('${body.nome}')"))
         	.to("jdbc:default");
         
-        from("seda:register")
+        from("seda:send")
+        	.routeId("route.logs")
         	.log("Novo usuário: ${body}");
-			//.to("http://localhost:8081");
+			//.to("http://localhost:8080/logs");
 	}
 
 }
