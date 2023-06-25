@@ -6,6 +6,7 @@ import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +28,14 @@ public class UsuariosControler {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping
-	public List<Usuarios> getUsers() {
+	public ResponseEntity<List<Usuarios>> getUsers() {
 		List<Usuarios> users = producerTemplate.requestBody("direct:select", null, List.class);
-		return users;
+		return ResponseEntity.ok(users);
 	}
+	
+	
+	
+	
 	
 	@PostMapping
 	public ResponseEntity<String> save(@RequestBody List<Usuarios> user) {
