@@ -69,3 +69,10 @@ http://localhost:8080/users
     "nome": "Anna Carolina"
 }]
 ```
+
+- Documentação dos recursos da API
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
