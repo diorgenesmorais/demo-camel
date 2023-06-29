@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.InfoDTO;
 import com.example.demo.model.Usuarios;
 
 import io.swagger.annotations.Api;
@@ -39,9 +40,11 @@ public class UsuariosControler {
 	
 	@ApiOperation("Adiciona um ou mais usuários")
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody List<Usuarios> user) {
+	public ResponseEntity<InfoDTO> save(@RequestBody List<Usuarios> user) {
 		// TODO: preciso resolver o status da camada service, se de fato foi criado.
 		producerAdd.sendBody(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body("Usuário(s) criado(s)");	
+		InfoDTO result = new InfoDTO();
+		result.setResult("Usuário(s) criado(s)");
+		return ResponseEntity.status(HttpStatus.CREATED).body(result);	
 	}
 }
